@@ -8,7 +8,7 @@ interface HexTileProps {
 
 const HexTile: React.FC<HexTileProps> = ({ id, number, isEven }) => {
     return (
-        <div id={`tile-${id}`} className="hex" style={isEven ? undefined : { backgroundColor: 'blue' }}>
+        <div id={`tile-${id}`} className="hex" style={number == 0 ? { backgroundColor: 'gray' } : undefined}>
             {number}
         </div>
     );

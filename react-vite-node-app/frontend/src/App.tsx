@@ -14,7 +14,7 @@ const App = () => {
   const [hexTiles, setHexTiles] = useState<HexTileProps[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/generateHexTiles')
+    fetch('http://localhost:5000/api/generateHexTiles?rowLenght=19')
       .then((res) => res.json())
       .then((hexTiles) => setHexTiles(hexTiles));
   }, []);

@@ -1,11 +1,11 @@
 function generateNumberPool() {
     const pool = [];
 
-    for (let i = 3; i <= 11; i++) {
-        if (i !== 8) pool.push(i, i);
+    for (let i = 1; i <= 12; i++) {
+        pool.push(i, i);
     }
 
-    pool.push(0, 2, 8, 12);
+    pool.push(0);
     return pool;
 }
 
