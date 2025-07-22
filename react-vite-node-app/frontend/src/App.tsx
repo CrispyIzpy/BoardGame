@@ -1,44 +1,75 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState, type JSX } from 'react';
+import './App.css';
 
-
-function App() {
-  const [data, setData] = useState(null);
-  // const [count, setCount] = useState(0)
+const App = () => {
+  const [data, setData] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/hello')
-      .then(res => res.json())
-      .then(data => setData(data.message));
+      .then((res) => res.json())
+      .then((data) => setData(data.message));
   }, []);
 
-  return <h1>{data || "Loading..."}</h1>;
-  // return <h1>{data || "Loading..."}</h1>;
-  // <>
-  //   <div>
-  //     <a href="https://vite.dev" target="_blank">
-  //       <img src={viteLogo} className="logo" alt="Vite logo" />
-  //     </a>
-  //     <a href="https://react.dev" target="_blank">
-  //       <img src={reactLogo} className="logo react" alt="React logo" />
-  //     </a>
-  //   </div>
-  //   <h1>Vite + React</h1>
-  //   <div className="card">
-  //     <button onClick={() => setCount((count) => count + 1)}>
-  //       count is {count}
-  //     </button>
-  //     <p>
-  //       Edit <code>src/App.tsx</code> and save to test HMR
-  //     </p>
-  //   </div>
-  //   <p className="read-the-docs">
-  //     Click on the Vite and React logos to learn more
-  //   </p>
-  // </>
-  // )
-}
+  const maxNum = 12;
+  const minNum = 2;
 
-export default App
+  // make it so all of the tiles have a random number
+  // in the game there is 2 of each number exept 2, 8 and 12
+  const RandFieldNumber = (): number => {
+    Math.floor(Math.random() * (maxNum - minNum) + minNum)
+
+    return 1;
+  }
+
+  const renderRow = (rowLength: number): JSX.Element => {
+    const row: JSX.Element[] = [];
+
+    for (let c = 0; c < rowLength; c++) {
+      const isEven = c % 2 === 0;
+
+      row.push(
+        <div
+          className="hex"
+          style={isEven ? undefined : { backgroundColor: 'blue' }}
+        >
+          {RandFieldNumber()}
+        </div>
+      );
+    }
+
+    return (
+      <div className="hex-row" key={`row-${rowLength}-${Math.random()}`}>
+        {row}
+      </div>
+    );
+  }
+
+  const maxRowLenght = 5;
+  const minRowLenght = 3;
+
+  const renderHexGrid = (): JSX.Element[] => {
+    const hexGrid: JSX.Element[] = [];
+
+    // Rows going up
+    for (let r = minRowLenght; r < maxRowLenght; r++) {
+      hexGrid.push(renderRow(r));
+    }
+
+    // Rows going down
+    for (let r = maxRowLenght; r >= minRowLenght; r--) {
+      hexGrid.push(renderRow(r));
+    }
+
+    return hexGrid;
+  };
+
+
+  return (
+    <>
+      <h1>{data || 'Loading...'}</h1>
+      <div className="hex-grid">{renderHexGrid()}</div>
+    </>
+  );
+};
+
+export default App;
