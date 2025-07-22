@@ -1,68 +1,55 @@
 import { useEffect, useState, type JSX } from 'react';
 import './App.css';
+import HexTile from './components/HexTile';
+import { generateNumberPool, shuffleArray } from './utils/generateNumberPool';
+
+interface HexTileProps {
+  id: number;
+  number: number;
+  isEven: boolean;
+}
 
 const App = () => {
   const [data, setData] = useState<string | null>(null);
+  const [hexTiles, setHexTiles] = useState<HexTileProps[]>([]);
 
   useEffect(() => {
-    fetch('/api/hello')
+    fetch('http://localhost:5000/api/generateHexTiles')
       .then((res) => res.json())
-      .then((data) => setData(data.message));
+      .then((hexTiles) => setHexTiles(hexTiles));
   }, []);
 
-  const maxNum = 12;
-  const minNum = 2;
-
-  // make it so all of the tiles have a random number
-  // in the game there is 2 of each number exept 2, 8 and 12
-  const RandFieldNumber = (): number => {
-    Math.floor(Math.random() * (maxNum - minNum) + minNum)
-
-    return 1;
-  }
-
-  const renderRow = (rowLength: number): JSX.Element => {
-    const row: JSX.Element[] = [];
-
-    for (let c = 0; c < rowLength; c++) {
-      const isEven = c % 2 === 0;
-
-      row.push(
-        <div
-          className="hex"
-          style={isEven ? undefined : { backgroundColor: 'blue' }}
-        >
-          {RandFieldNumber()}
-        </div>
-      );
-    }
-
-    return (
-      <div className="hex-row" key={`row-${rowLength}-${Math.random()}`}>
-        {row}
-      </div>
-    );
-  }
-
-  const maxRowLenght = 5;
-  const minRowLenght = 3;
+  console.log(hexTiles);
 
   const renderHexGrid = (): JSX.Element[] => {
     const hexGrid: JSX.Element[] = [];
+    let index = 0;
+    const rowLengths = [3, 4, 5, 4, 3]; // diamond shape
 
-    // Rows going up
-    for (let r = minRowLenght; r < maxRowLenght; r++) {
-      hexGrid.push(renderRow(r));
-    }
+    for (let row = 0; row < rowLengths.length; row++) {
+      const length = rowLengths[row];
+      const rowTiles = hexTiles.slice(index, index + length);
 
-    // Rows going down
-    for (let r = maxRowLenght; r >= minRowLenght; r--) {
-      hexGrid.push(renderRow(r));
+      const rowElements = rowTiles.map((tile) => (
+        <HexTile
+          key={tile.id}
+          id={tile.id}
+          number={tile.number}
+          isEven={tile.isEven}
+        />
+      ));
+
+      hexGrid.push(
+        <div className="hex-row" key={`row-${row}`}>
+          {rowElements}
+        </div>
+      );
+
+      index += length;
     }
 
     return hexGrid;
   };
-
 
   return (
     <>
