@@ -1,7 +1,7 @@
 function generateNumberPool() {
     const pool = [];
 
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 2; i <= 12; i++) {
         if (i == 7) {
             continue;
         }

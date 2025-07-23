@@ -1,3 +1,43 @@
+.connection-status {
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition-medium);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.connection-status.connected {
+    background: rgba(46, 213, 115, 0.15);
+    color: #7bed9f;
+    box-shadow: 0 4px 20px rgba(46, 213, 115, 0.2);
+}
+
+.connection-status.disconnected {
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.2);
+}
+
+.connection-status.connecting {
+    background: rgba(0, 212, 255, 0.15);
+    color: var(--accent-color);
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+}
+
+.connection-status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s infinite;
+}
+
 .hex-grid {
     display: flex;
     flex-direction: column;

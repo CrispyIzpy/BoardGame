@@ -62,13 +62,21 @@ const App = () => {
 
   return (
     <>
-      <h1>
+      <div
+        className={`connection-status ${serverConnected === null
+            ? 'connecting'
+            : serverConnected
+              ? 'connected'
+              : 'disconnected'
+          }`}
+      >
         {serverConnected === null
           ? 'Connecting to server...'
           : serverConnected
             ? 'Server connected'
             : 'Server disconnected'}
-      </h1>
+      </div>
+
       <div className="hex-grid">{renderHexGrid()}</div>
     </>
   );
