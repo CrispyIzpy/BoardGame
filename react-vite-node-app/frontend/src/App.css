@@ -5,10 +5,35 @@
     margin-top: 40px;
 }
 
+.hex-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
 .hex-row {
     display: flex;
     position: relative;
     margin-top: -25px; /* 1/4 of the height */
+
+    /* Flexbox for centering content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Typography */
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "Arial", sans-serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.hex[style*="gray"] {
+    background-color: #f7dc6f !important;
+    color: #2c3e50;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .hex {
@@ -17,6 +42,25 @@
     clip-path: polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0);
     background: #3b8686;
     text-align: center;
+}
+
+.hex[data-number="2"],
+.hex[data-number="12"] {
+    background: #566573; /* rare numbers */
+    color: #e74c3c;
+}
+
+.hex[data-number="3"],
+.hex[data-number="11"],
+.hex[data-number="4"],
+.hex[data-number="10"],
+.hex[data-number="5"],
+.hex[data-number="9"],
+.hex[data-number="6"],
+.hex[data-number="8"] {
+    background: #566573; /* Wheat */
+    color: #2c3e50;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 /* .hex-row.offset {

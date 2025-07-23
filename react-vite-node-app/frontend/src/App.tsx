@@ -1,7 +1,6 @@
 import { useEffect, useState, type JSX } from 'react';
 import './App.css';
 import HexTile from './components/HexTile';
-import { generateNumberPool, shuffleArray } from './utils/generateNumberPool';
 
 interface HexTileProps {
   id: number;
@@ -10,13 +9,23 @@ interface HexTileProps {
 }
 
 const App = () => {
-  const [data, setData] = useState<string | null>(null);
+  const [serverConnected, setServerConnected] = useState<boolean | null>(null);
   const [hexTiles, setHexTiles] = useState<HexTileProps[]>([]);
 
   useEffect(() => {
     fetch('http://localhost:5000/api/generateHexTiles?rowLenght=19')
-      .then((res) => res.json())
-      .then((hexTiles) => setHexTiles(hexTiles));
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then((hexTiles) => {
+        setHexTiles(hexTiles);
+        setServerConnected(true);
+      })
+      .catch((err) => {
+        console.error('Error fetching tiles:', err);
+        setServerConnected(false);
+      });
   }, []);
 
   console.log(hexTiles);
@@ -53,7 +62,13 @@ const App = () => {
 
   return (
     <>
-      <h1>{data || 'Loading...'}</h1>
+      <h1>
+        {serverConnected === null
+          ? 'Connecting to server...'
+          : serverConnected
+            ? 'Server connected'
+            : 'Server disconnected'}
+      </h1>
       <div className="hex-grid">{renderHexGrid()}</div>
     </>
   );

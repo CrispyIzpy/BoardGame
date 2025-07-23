@@ -2,10 +2,12 @@ function generateNumberPool() {
     const pool = [];
 
     for (let i = 1; i <= 12; i++) {
+        if (i == 7) {
+            continue;
+        }
         pool.push(i, i);
     }
 
-    pool.push(0);
     return pool;
 }
 
@@ -23,7 +25,21 @@ function generateHexTiles(rowLenght) {
     array = shuffleArray();
     const tiles = [];
 
+    // chose id for 7
+    let randomIdZero = Math.floor(Math.random() * rowLenght);
+
     for (let i = 0; i < rowLenght; i++) {
+        const isEven = i % 2 === 0;
+
+        // add the 7 in the tiles
+        if (i == randomIdZero) {
+            tiles.push({
+                id: i,
+                number: 7,
+                isEven: isEven,
+            });
+            continue;
+        }
         let randomElement;
         if (array.length === 0) {
             number = -1;
@@ -32,7 +48,6 @@ function generateHexTiles(rowLenght) {
             randomElement = array[randomIndex];
             array.splice(randomIndex, 1);
         }
-        const isEven = i % 2 === 0;
 
         tiles.push({
             id: i,
