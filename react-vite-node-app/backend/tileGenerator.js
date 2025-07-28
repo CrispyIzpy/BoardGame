@@ -2,17 +2,14 @@ function generateNumberPool() {
     const pool = [];
 
     for (let i = 2; i <= 12; i++) {
-        if (i == 7) {
-            continue;
-        }
-        pool.push(i, i);
+        if (i === 7) continue;
+        pool.push(i, i); // two of each number
     }
 
     return pool;
 }
 
-function shuffleArray() {
-    array = generateNumberPool();
+function shuffleArray(array) {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -21,40 +18,42 @@ function shuffleArray() {
     return shuffled;
 }
 
-function generateHexTiles(rowLenght) {
-    array = shuffleArray();
+function generateHexTiles(shape) {
+    const totalTiles = shape.reduce((sum, row) => sum + row, 0);
+    const numberPool = shuffleArray(generateNumberPool());
+
+    // Pick a random index where the tile will have number 7 (desert)
+    const desertTileIndex = Math.floor(Math.random() * totalTiles);
+
     const tiles = [];
+    let tileId = 0;
 
-    // chose id for 7
-    let randomIdZero = Math.floor(Math.random() * rowLenght);
+    for (let row = 0; row < shape.length; row++) {
+        for (let col = 0; col < shape[row]; col++) {
+            const isEven = tileId % 2 === 0;
 
-    for (let i = 0; i < rowLenght; i++) {
-        const isEven = i % 2 === 0;
+            let number;
+            if (tileId === desertTileIndex) {
+                number = 7;
+            } else if (numberPool.length > 0) {
+                const idx = Math.floor(Math.random() * numberPool.length);
+                number = numberPool.splice(idx, 1)[0];
+            } else {
+                number = -1; // fallback (shouldn't happen)
+            }
 
-        // add the 7 in the tiles
-        if (i == randomIdZero) {
             tiles.push({
-                id: i,
-                number: 7,
-                isEven: isEven,
+                id: tileId,
+                number,
+                isEven,
+                row,
+                col,
             });
-            continue;
-        }
-        let randomElement;
-        if (array.length === 0) {
-            number = -1;
-        } else {
-            let randomIndex = Math.floor(Math.random() * array.length);
-            randomElement = array[randomIndex];
-            array.splice(randomIndex, 1);
-        }
 
-        tiles.push({
-            id: i,
-            number: randomElement,
-            isEven: isEven,
-        });
+            tileId++;
+        }
     }
+
     return tiles;
 }
 

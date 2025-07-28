@@ -4,7 +4,7 @@ import woodImage from '../assets/pixil-frame-0.png';
 interface HexTileProps {
     id: number;
     number: number;
-    isEven: boolean;
+    type: number;
 }
 
 
@@ -26,7 +26,7 @@ interface HexTileProps {
 //     );
 // };
 
-const HexTile: React.FC<HexTileProps> = ({ id, number, isEven }) => {
+const HexTile: React.FC<HexTileProps> = ({ id, number, type }) => {
     return (
         <div id={`tile-${id}`} className="hex" data-number={number} style={number == 7 ? { backgroundColor: 'gray' } : undefined}>
             {<div className="number-token">{number}</div>}

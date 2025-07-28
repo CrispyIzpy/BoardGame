@@ -11,10 +11,10 @@ app.get("/api/hello", (req, res) => {
     res.json({ message: "Hello from backend" });
 });
 
-app.get("/api/generateHexTiles", (req, res) => {
+app.post("/api/generateHexTiles", (req, res) => {
     console.log("Tiles request");
-    const rowLenght = parseInt(req.query.rowLenght) || 24;
-    const tiles = generateHexTiles(rowLenght);
+    const size = req.body || 24;
+    const tiles = generateHexTiles(size);
     res.json(tiles);
 });
 

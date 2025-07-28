@@ -5,15 +5,23 @@ import HexTile from './components/HexTile';
 interface HexTileProps {
   id: number;
   number: number;
-  isEven: boolean;
+  type: number;
 }
 
 const App = () => {
   const [serverConnected, setServerConnected] = useState<boolean | null>(null);
   const [hexTiles, setHexTiles] = useState<HexTileProps[]>([]);
 
+  const rowLengths = [3, 4, 5, 4, 3]; // diamond shape
   useEffect(() => {
-    fetch('http://localhost:5000/api/generateHexTiles?rowLenght=19')
+    fetch('http://localhost:5000/api/generateHexTiles', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(rowLengths),
+    }
+    )
       .then((res) => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
@@ -33,7 +41,6 @@ const App = () => {
   const renderHexGrid = (): JSX.Element[] => {
     const hexGrid: JSX.Element[] = [];
     let index = 0;
-    const rowLengths = [3, 4, 5, 4, 3]; // diamond shape
 
     for (let row = 0; row < rowLengths.length; row++) {
       const length = rowLengths[row];
@@ -44,7 +51,7 @@ const App = () => {
           key={tile.id}
           id={tile.id}
           number={tile.number}
-          isEven={tile.isEven}
+          type={tile.type}
         />
       ));
 
@@ -64,10 +71,10 @@ const App = () => {
     <>
       <div
         className={`connection-status ${serverConnected === null
-            ? 'connecting'
-            : serverConnected
-              ? 'connected'
-              : 'disconnected'
+          ? 'connecting'
+          : serverConnected
+            ? 'connected'
+            : 'disconnected'
           }`}
       >
         {serverConnected === null
