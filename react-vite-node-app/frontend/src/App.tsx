@@ -46,14 +46,29 @@ const App = () => {
       const length = rowLengths[row];
       const rowTiles = hexTiles.slice(index, index + length);
 
-      const rowElements = rowTiles.map((tile) => (
-        <HexTile
-          key={tile.id}
-          id={tile.id}
-          number={tile.number}
-          type={tile.type}
-        />
-      ));
+      const rowElements = rowTiles.map((tile, colIndex) => {
+        const rightEdge = colIndex === length - 1;
+
+        // Check if tile is on bottom edge (last row)
+        const underEdge = row === rowLengths.length - 1;
+
+        // You might also want left edge
+        const leftEdge = colIndex === 0;
+
+        // And top edge
+        const topEdge = row === 0;
+
+        return (
+          <HexTile
+            key={tile.id}
+            id={tile.id}
+            number={tile.number}
+            type={tile.type}
+            onClick={(roadId: number, id: number) => handleTileClick(roadId, id)}
+            leftEdge={leftEdge}
+          />
+        )
+      });
 
       hexGrid.push(
         <div className="hex-row" key={`row-${row}`}>
@@ -65,6 +80,11 @@ const App = () => {
     }
 
     return hexGrid;
+  };
+
+  const handleTileClick = (roadId: number, id: number) => {
+    console.log('Clicked road:', roadId, 'From tile:', id);
+    alert(`'Clicked road:', ${roadId}, 'From tile:', ${id}`);
   };
 
   return (

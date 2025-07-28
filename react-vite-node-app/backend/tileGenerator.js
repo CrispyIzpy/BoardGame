@@ -30,7 +30,7 @@ function generateHexTiles(shape) {
 
     for (let row = 0; row < shape.length; row++) {
         for (let col = 0; col < shape[row]; col++) {
-            const isEven = tileId % 2 === 0;
+            const type = tileId % 2 === 0;
 
             let number;
             if (tileId === desertTileIndex) {
@@ -45,7 +45,7 @@ function generateHexTiles(shape) {
             tiles.push({
                 id: tileId,
                 number,
-                isEven,
+                type,
                 row,
                 col,
             });

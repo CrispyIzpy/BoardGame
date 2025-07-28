@@ -101,7 +101,7 @@
     height: 100px; /* adjust to control the size  */
     aspect-ratio: cos(30deg);
     clip-path: polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0);
-    margin-right: 4px;
+    /* margin-right: 4px; */
     background: #3b8686;
     text-align: center;
 }
@@ -128,3 +128,59 @@
 /* .hex-row.offset {
     margin-left: 30px;
 } */
+
+/*TODO Road test */
+
+.hex-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Base road wrapper styles */
+.road-wrapper {
+    position: absolute;
+    width: 25px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+/* Base road styles */
+.road {
+    width: 10px;
+    height: 50px;
+    background-color: white;
+    transition: background-color 100ms linear;
+}
+
+/* Hover effect for all roads */
+.road-wrapper:hover .road {
+    background-color: blue;
+}
+
+/* Position-specific modifiers */
+.road-left-wrapper {
+    top: 50%;
+    left: -12px;
+    transform: translateY(-50%);
+}
+
+.road-right-wrapper {
+    top: 50%;
+    right: -12px;
+    transform: translateY(-50%);
+}
+
+.road-left-under-wrapper {
+    bottom: -25px;
+    left: 10%;
+    transform: rotate(-60deg);
+}
+
+.road-right-under-wrapper {
+    bottom: -25px;
+    right: 10%;
+    transform: rotate(60deg);
+}

@@ -5,6 +5,8 @@ interface HexTileProps {
     id: number;
     number: number;
     type: number;
+    onClick: (roadId: number, id: number) => void;
+    leftEdge: boolean
 }
 
 
@@ -26,10 +28,36 @@ interface HexTileProps {
 //     );
 // };
 
-const HexTile: React.FC<HexTileProps> = ({ id, number, type }) => {
+const HexTile: React.FC<HexTileProps> = ({ id, number, type, onClick, leftEdge }) => {
     return (
-        <div id={`tile-${id}`} className="hex" data-number={number} style={number == 7 ? { backgroundColor: 'gray' } : undefined}>
-            {<div className="number-token">{number}</div>}
+
+        <div id={`tile-${id}`} className="hex-container">
+            <div
+                className="hex"
+                data-number={number}
+                style={number == 7 ? { backgroundColor: 'gray' } : undefined}
+            >
+                <div className="number-token">{number}</div>
+            </div>
+
+            {/* Roads as children of the hex tile */}
+
+            <div className="road-wrapper road-right-wrapper" onClick={() => onClick(0, id)}>
+                <div className="road"></div>
+            </div>
+
+            <div className="road-wrapper road-left-under-wrapper" onClick={() => onClick(1, id)}>
+                <div className="road"></div>
+            </div>
+
+            <div className="road-wrapper road-right-under-wrapper" onClick={() => onClick(2, id)}>
+                <div className="road"></div>
+            </div>
+            {leftEdge && (
+                <div className="road-wrapper road-left-wrapper" onClick={() => onClick(0, id)}>
+                    <div className="road"></div>
+                </div>
+            )}
         </div>
     );
 };
