@@ -66,6 +66,7 @@ const App = () => {
             type={tile.type}
             onClick={(roadId: number, id: number) => handleTileClick(roadId, id)}
             leftEdge={leftEdge}
+            topEdge={topEdge}
           />
         )
       });

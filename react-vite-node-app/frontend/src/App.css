@@ -106,25 +106,30 @@
     text-align: center;
 }
 
-.hex[data-number="2"],
-.hex[data-number="12"] {
-    background: #566573; /* rare numbers */
-    color: #e74c3c;
+.hex[data-number="6"] .number-token,
+.hex[data-number="8"] .number-token {
+    color: #d32f2f;
+    font-weight: 900;
+    position: relative;
 }
 
-.hex[data-number="3"],
-.hex[data-number="11"],
-.hex[data-number="4"],
-.hex[data-number="10"],
-.hex[data-number="5"],
-.hex[data-number="9"],
-.hex[data-number="6"],
-.hex[data-number="8"] {
-    background: #566573; /* Wheat */
-    color: #2c3e50;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+.hex[data-number="6"] .number-token::after,
+.hex[data-number="8"] .number-token::after {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #d32f2f;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
 }
 
+.hex[data-number="2"] .number-token,
+.hex[data-number="12"] .number-token {
+    background: linear-gradient(145deg, #ffcdd2, #f8bbd9);
+    border-color: #8e24aa;
+    color: #4a148c;
+}
 /* .hex-row.offset {
     margin-left: 30px;
 } */
@@ -148,16 +153,21 @@
 }
 
 /* Base road styles */
+
 .road {
-    width: 10px;
-    height: 50px;
-    background-color: white;
-    transition: background-color 100ms linear;
+    width: 12px;
+    height: 60px;
+    background: linear-gradient(145deg, #ffffff, #e8e8e8);
+    border: 2px solid #8b4513;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Hover effect for all roads */
 .road-wrapper:hover .road {
-    background-color: blue;
+    background: linear-gradient(145deg, #4fc3f7, #29b6f6);
+    border-color: #0277bd;
+    transform: scale(1.1);
 }
 
 /* Position-specific modifiers */
@@ -183,4 +193,16 @@
     bottom: -25px;
     right: 10%;
     transform: rotate(60deg);
+}
+
+.road-left-top-wrapper {
+    top: -25px;
+    left: 10%;
+    transform: rotate(60deg);
+}
+
+.road-right-top-wrapper {
+    top: -25px;
+    right: 10%;
+    transform: rotate(-60deg);
 }

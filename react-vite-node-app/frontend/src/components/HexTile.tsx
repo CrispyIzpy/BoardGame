@@ -7,6 +7,7 @@ interface HexTileProps {
     type: number;
     onClick: (roadId: number, id: number) => void;
     leftEdge: boolean
+    topEdge: boolean
 }
 
 
@@ -28,7 +29,7 @@ interface HexTileProps {
 //     );
 // };
 
-const HexTile: React.FC<HexTileProps> = ({ id, number, type, onClick, leftEdge }) => {
+const HexTile: React.FC<HexTileProps> = ({ id, number, type, onClick, leftEdge, topEdge }) => {
     return (
 
         <div id={`tile-${id}`} className="hex-container">
@@ -54,9 +55,20 @@ const HexTile: React.FC<HexTileProps> = ({ id, number, type, onClick, leftEdge }
                 <div className="road"></div>
             </div>
             {leftEdge && (
-                <div className="road-wrapper road-left-wrapper" onClick={() => onClick(0, id)}>
+                <div className="road-wrapper road-left-wrapper" onClick={() => onClick(3, id)}>
                     <div className="road"></div>
                 </div>
+            )}
+
+            {topEdge && (
+                <>
+                    <div className="road-wrapper road-left-top-wrapper" onClick={() => onClick(4, id)}>
+                        <div className="road"></div>
+                    </div>
+                    <div className="road-wrapper road-right-top-wrapper" onClick={() => onClick(5, id)}>
+                        <div className="road"></div>
+                    </div>
+                </>
             )}
         </div>
     );
