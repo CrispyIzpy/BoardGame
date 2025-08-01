@@ -36,6 +36,26 @@ const App = () => {
       });
   }, []);
 
+  const handleClick = (roadId: number, tileId: number) => {
+    fetch('http://localhost:5000/api/makeMove', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ roadId: roadId, tileId: tileId }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Click not registered');
+        return res.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
+
   console.log(hexTiles);
 
   const renderHexGrid = (): JSX.Element[] => {
@@ -49,14 +69,16 @@ const App = () => {
       const rowElements = rowTiles.map((tile, colIndex) => {
         const rightEdge = colIndex === length - 1;
 
-        // Check if tile is on bottom edge (last row)
+        // Check if tile is on bottom edge
         const underEdge = row === rowLengths.length - 1;
 
-        // You might also want left edge
+        // left edge
         const leftEdge = colIndex === 0;
 
-        // And top edge
+        // top edge
         const topEdge = row === 0;
+
+        const topHalf = row < rowLengths.length / 2;
 
         return (
           <HexTile
@@ -64,9 +86,11 @@ const App = () => {
             id={tile.id}
             number={tile.number}
             type={tile.type}
-            onClick={(roadId: number, id: number) => handleTileClick(roadId, id)}
+            onClick={(roadId: number, tileId: number) => handleTileClick(roadId, tileId)}
             leftEdge={leftEdge}
             topEdge={topEdge}
+            rightEdge={rightEdge}
+            topHalf={topHalf}
           />
         )
       });
@@ -83,9 +107,10 @@ const App = () => {
     return hexGrid;
   };
 
-  const handleTileClick = (roadId: number, id: number) => {
-    console.log('Clicked road:', roadId, 'From tile:', id);
-    alert(`'Clicked road:', ${roadId}, 'From tile:', ${id}`);
+  const handleTileClick = (roadId: number, tileId: number) => {
+    handleClick(roadId, tileId)
+    // console.log('Clicked road:', roadId, 'From tile:', tileId);
+    // alert(`'Clicked road:', ${roadId}, 'From tile:', ${tileId}`);
   };
 
   return (

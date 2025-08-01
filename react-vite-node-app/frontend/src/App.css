@@ -1,3 +1,7 @@
+:root {
+    --hexSize: 100px;
+}
+
 .connection-status {
     font-size: 1.1rem;
     padding: 0.75rem 1.5rem;
@@ -45,17 +49,11 @@
     margin-top: 40px;
 }
 
-.hex-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 40px;
-}
-
 .hex-row {
     display: flex;
     position: relative;
-    margin-top: -22px; /* 1/4 of the height to be touching */
+    margin-top: calc(var(--hexSize) * -0.2);
+    /* 1/4 of the height to be touching */
 
     /* Flexbox for centering content */
     display: flex;
@@ -98,7 +96,7 @@
 
 .hex {
     position: relative;
-    height: 100px; /* adjust to control the size  */
+    height: var(--hexSize); /* adjust to control the size  */
     aspect-ratio: cos(30deg);
     clip-path: polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0);
     /* margin-right: 4px; */
@@ -206,3 +204,67 @@
     right: 10%;
     transform: rotate(-60deg);
 }
+
+.settlement-wrapper {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    cursor: pointer;
+}
+
+/* .settlement {
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(145deg, #f5f5f5, #d0d0d0);
+    border: 2px solid #8b4513;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.settlement-wrapper:hover .settlement {
+    background: linear-gradient(145deg, #81c784, #66bb6a);
+    border-color: #2e7d32;
+    transform: scale(1.2);
+}
+
+ Settlement position modifiers 
+.settlement-top-left-wrapper {
+    top: 25px;
+    left: 0%;
+    transform: translate(-50%, -50%);
+}
+
+.settlement-top-right-wrapper {
+    top: -10px;
+    right: 15%;
+    transform: translate(50%, -50%);
+}
+
+.settlement-left-wrapper {
+    top: 50%;
+    left: -10px;
+    transform: translate(-50%, -50%);
+}
+
+.settlement-right-wrapper {
+    top: 50%;
+    right: -10px;
+    transform: translate(50%, -50%);
+}
+
+.settlement-bottom-left-wrapper {
+    bottom: -10px;
+    left: 15%;
+    transform: translate(-50%, 50%);
+}
+
+.settlement-bottom-right-wrapper {
+    bottom: -10px;
+    right: 15%;
+    transform: translate(50%, 50%);
+} */

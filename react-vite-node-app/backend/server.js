@@ -18,6 +18,14 @@ app.post("/api/generateHexTiles", (req, res) => {
     res.json(tiles);
 });
 
+app.post("/api/makeMove", (req, res) => {
+    const tileId = req.body.tileId;
+    const roadId = req.body.roadId;
+    const msg = `"Road build on tile id: ", ${tileId}, " and road id: ", ${roadId}`;
+    console.log(msg);
+    res.json(msg);
+});
+
 const PORT = 5000;
 app.listen(PORT, () =>
     console.log(`Backend running on http://localhost:${PORT}`)
