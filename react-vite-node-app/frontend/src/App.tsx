@@ -19,7 +19,7 @@ const App = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(rowLengths),
+      body: JSON.stringify({ rowLengths: rowLengths }),
     }
     )
       .then((res) => {
