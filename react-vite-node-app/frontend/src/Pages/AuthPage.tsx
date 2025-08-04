@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "../styles/AuthPage.css";
+import axios from "axios";
+import { Route } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -31,23 +33,22 @@ const AuthPage: React.FC = () => {
     setIsLoading(true);
 
     // Simulate API call
-    await fetch("http://localhost:5000/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Could not register");
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    const route = isLogin ? "Login" : "Register";
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/${route}`,
+        formData
+      );
+      console.log("Success:", response.data);
+      if (response.status == 200) {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      // This ensures loading stops regardless of success or failure
+      setIsLoading(false);
+    }
 
     console.log(isLogin ? "Login" : "Register", formData);
     setIsLoading(false);

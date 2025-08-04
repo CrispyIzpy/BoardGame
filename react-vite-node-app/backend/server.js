@@ -28,6 +28,12 @@ app.use(
 app.post("/api/register", (req, res) => {
     console.log("Register");
     console.log(req.body);
+    res.status(200);
+});
+
+app.post("/api/login", (req, res) => {
+    console.log("Login");
+    console.log(req.body);
 });
 
 app.get("/api/hello", (req, res) => {
