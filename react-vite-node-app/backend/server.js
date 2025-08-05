@@ -1,8 +1,9 @@
-const express = require("express");
-const session = require("express-session");
-const cors = require("cors");
+import express from "express";
+import session from "express-session";
+import cors from "cors";
 
-const { generateHexTiles } = require("./tileGenerator");
+import generateHexTiles from "./tileGenerator.js";
+import testConnection from "./Auth.js";
 
 const app = express();
 app.use(
@@ -26,9 +27,11 @@ app.use(
 );
 
 app.post("/api/register", (req, res) => {
+    testConnection();
     console.log("Register");
     console.log(req.body);
     res.status(200);
+    res.json({ message: "Registered successfully" });
 });
 
 app.post("/api/login", (req, res) => {

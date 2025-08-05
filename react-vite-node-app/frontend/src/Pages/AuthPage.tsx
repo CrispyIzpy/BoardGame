@@ -40,9 +40,9 @@ const AuthPage: React.FC = () => {
         formData
       );
       console.log("Success:", response.data);
-      if (response.status == 200) {
-        setIsLoading(false);
-      }
+      // if (response.status == 200) {
+      //   setIsLoading(false);
+      // }
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -51,7 +51,6 @@ const AuthPage: React.FC = () => {
     }
 
     console.log(isLogin ? "Login" : "Register", formData);
-    setIsLoading(false);
   };
 
   const toggleMode = () => {

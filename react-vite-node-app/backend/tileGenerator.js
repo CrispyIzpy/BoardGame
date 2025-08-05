@@ -18,7 +18,7 @@ function shuffleArray(array) {
     return shuffled;
 }
 
-function generateHexTiles(shape) {
+function generateHexTiles(shape = []) {
     const totalTiles = shape.reduce((sum, row) => sum + row, 0);
     const numberPool = shuffleArray(generateNumberPool());
 
@@ -57,4 +57,4 @@ function generateHexTiles(shape) {
     return tiles;
 }
 
-module.exports = { generateHexTiles };
+export default generateHexTiles();
