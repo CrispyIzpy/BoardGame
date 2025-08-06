@@ -144,6 +144,91 @@
     animation: slideIn 0.6s ease-out 0.2s both;
 }
 
+/* Message Styles */
+.message {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(10px);
+    border: 1px solid;
+    animation: messageSlideIn 0.4s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.message::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    opacity: 0.8;
+}
+
+.message.success {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+}
+
+.message.success::before {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.message.error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.message.error::before {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.message-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.message.success .message-icon {
+    background: rgba(34, 197, 94, 0.2);
+}
+
+.message.error .message-icon {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.message-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+@keyframes messageSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 .auth-form {
     margin-bottom: 2rem;
 }

@@ -19,6 +19,10 @@ const AuthPage: React.FC = () => {
     username: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<{
+    text: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,12 +43,15 @@ const AuthPage: React.FC = () => {
         `http://localhost:5000/api/${route}`,
         formData
       );
-      console.log("Success:", response.data);
-      // if (response.status == 200) {
-      //   setIsLoading(false);
-      // }
+      setMessage({
+        text: response.data.message || "Success!",
+        type: "success",
+      });
     } catch (error) {
-      console.error("Error:", error);
+      setMessage({
+        text: error.response?.data?.message || "Something went wrong",
+        type: "error",
+      });
     } finally {
       // This ensures loading stops regardless of success or failure
       setIsLoading(false);
@@ -84,6 +91,17 @@ const AuthPage: React.FC = () => {
               : "Join us and start your journey today"}
           </p>
         </div>
+
+        {message && (
+          <div className={`message ${message.type}`}>
+            <div className="message-content">
+              <span className="message-icon">
+                {message.type === "success" ? "✓" : "⚠"}
+              </span>
+              <span className="message-text">{message.text}</span>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           {!isLogin && (

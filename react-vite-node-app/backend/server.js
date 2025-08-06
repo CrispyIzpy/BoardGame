@@ -1,9 +1,9 @@
-import express from "express";
+import express, { response } from "express";
 import session from "express-session";
 import cors from "cors";
 
-import generateHexTiles from "./tileGenerator.js";
-import testConnection from "./Auth.js";
+import { generateHexTiles } from "./tileGenerator.js";
+import { register, login } from "./Auth.js";
 
 const app = express();
 app.use(
@@ -26,17 +26,45 @@ app.use(
     })
 );
 
-app.post("/api/register", (req, res) => {
-    testConnection();
-    console.log("Register");
-    console.log(req.body);
-    res.status(200);
-    res.json({ message: "Registered successfully" });
+app.post("/api/register", async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    const username = req.body.username;
+
+    const registerStatus = await register(
+        email,
+        password,
+        confirmPassword,
+        username
+    );
+    if (registerStatus === "Success") {
+        res.status(200);
+        res.json({ message: "Registered successfully" });
+        console.log("Success");
+    } else {
+        res.status(400);
+        res.json({ message: `${registerStatus}` });
+        console.log(registerStatus);
+    }
 });
 
-app.post("/api/login", (req, res) => {
-    console.log("Login");
-    console.log(req.body);
+app.post("/api/login", async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    const username = req.body.username;
+
+    const loginStatus = await login(email, password);
+    if (loginStatus === "Success") {
+        res.status(200);
+        res.json({ message: "Login successfully" });
+        console.log("Success");
+    } else {
+        res.status(400);
+        res.json({ message: `${loginStatus}` });
+        console.log(loginStatus);
+    }
 });
 
 app.get("/api/hello", (req, res) => {
