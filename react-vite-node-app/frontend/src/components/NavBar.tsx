@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../styles/NavBar.css";
 import { useNavigate, NavLink } from "react-router-dom";
 
@@ -17,7 +17,7 @@ interface User {
 interface NavBarProps {
   logo?: string;
   navItems?: NavItem[];
-  user?: User | null;
+  // user?: User | null;
   onMenuClick?: (item: NavItem) => void;
   onLogin?: () => void;
   onLogout?: () => void;
@@ -33,13 +33,14 @@ const NavBar: React.FC<NavBarProps> = ({
     { label: "Leaderboard", href: "/leaderboard" },
     { label: "About", href: "/about" },
   ],
-  user = null,
+  // user = null,
   onMenuClick,
   onLogin,
   onLogout,
   onProfile,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUser] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(
@@ -54,6 +55,22 @@ const NavBar: React.FC<NavBarProps> = ({
   onLogin = () => {
     navigate("/auth");
   };
+  if (user === null) {
+    fetch("/api/check-auth", {
+      credentials: "include", // VERY important to send cookies!
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        if (data.isLoggedIn) {
+          setUser(data.user); // store user info in React state
+          console.log(data.user);
+        } else {
+          setUser(null);
+        }
+      });
+  }
 
   useEffect(() => {
     const handleScroll = () => {

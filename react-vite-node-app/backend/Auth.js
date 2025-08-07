@@ -10,12 +10,12 @@ async function testConnection() {
     }
 }
 
-export async function register(
-    email = "",
-    password = "",
-    confirmPassword = "",
-    username = ""
-) {
+export async function register(userInfo) {
+    const email = userInfo.email;
+    const password = userInfo.password;
+    const confirmPassword = userInfo.confirmPassword;
+    const username = userInfo.username;
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return "Not a valid Email";
@@ -56,7 +56,9 @@ export async function register(
     }
 }
 
-export async function login(email = "", password = "") {
+export async function login(userInfo) {
+    const email = userInfo.email;
+    const password = userInfo.password;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return "Not a valid Email";
@@ -77,7 +79,11 @@ export async function login(email = "", password = "") {
         console.log(result);
         const isValid = await argon2.verify(user.password_hash, password);
         if (isValid) {
-            return "Success";
+            return {
+                status: "Success",
+                userId: user.id,
+                username: user.username,
+            };
         } else {
             return "Wrong password or username";
         }

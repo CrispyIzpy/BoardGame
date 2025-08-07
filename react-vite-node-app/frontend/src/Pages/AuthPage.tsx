@@ -40,7 +40,10 @@ const AuthPage: React.FC = () => {
     try {
       const response = await axios.post(
         `http://localhost:5000/api/${route}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       setMessage({
         text: response.data.message || "Success!",

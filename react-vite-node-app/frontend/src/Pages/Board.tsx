@@ -52,8 +52,6 @@ const Board = () => {
       });
   };
 
-  console.log(hexTiles);
-
   const renderHexGrid = (): JSX.Element[] => {
     const hexGrid: JSX.Element[] = [];
     let index = 0;
