@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../styles/AuthPage.css";
 import axios from "axios";
-import { Route } from "react-router-dom";
 
 interface FormData {
   email: string;

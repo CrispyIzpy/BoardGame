@@ -9,7 +9,6 @@ interface HexTileProps {
 }
 
 const Board = () => {
-  const [serverConnected, setServerConnected] = useState<boolean | null>(null);
   const [hexTiles, setHexTiles] = useState<HexTileProps[]>([]);
 
   const rowLengths = [3, 4, 5, 4, 3]; // diamond shape
@@ -27,11 +26,9 @@ const Board = () => {
       })
       .then((hexTiles) => {
         setHexTiles(hexTiles);
-        setServerConnected(true);
       })
       .catch((err) => {
         console.error("Error fetching tiles:", err);
-        setServerConnected(false);
       });
   }, []);
 
@@ -113,22 +110,6 @@ const Board = () => {
 
   return (
     <>
-      <div
-        className={`connection-status ${
-          serverConnected === null
-            ? "connecting"
-            : serverConnected
-            ? "connected"
-            : "disconnected"
-        }`}
-      >
-        {serverConnected === null
-          ? "Connecting to server..."
-          : serverConnected
-          ? "Server connected"
-          : "Server disconnected"}
-      </div>
-
       <div className="hex-grid">{renderHexGrid()}</div>
     </>
   );

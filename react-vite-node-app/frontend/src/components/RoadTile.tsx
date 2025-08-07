@@ -1,17 +1,16 @@
-import React from 'react';
-import woodImage from '../assets/pixil-frame-0.png';
+import React from "react";
 
 interface RoadTileProps {
-    id: number;
-    type: number;
+  id: number;
+  type: number;
 }
 
-const HexTile: React.FC<RoadTileProps> = ({ id, type }) => {
-    return (
-        <div id={`road-${id}`} className="road">
-            { }
-        </div>
-    );
+const HexTile: React.FC<RoadTileProps> = ({ id }) => {
+  return (
+    <div id={`road-${id}`} className="road">
+      {}
+    </div>
+  );
 };
 
 export default HexTile;
