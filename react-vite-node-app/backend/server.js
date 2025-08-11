@@ -38,12 +38,10 @@ app.use(
 app.post("/api/register", async (req, res) => {
     const registerStatus = await register(req.body);
     if (registerStatus === "Success") {
-        res.status(200);
-        res.json({ message: "Registered successfully" });
+        res.status(200).json({ message: "Registered successfully" });
         console.log("Success");
     } else {
-        res.status(400);
-        res.json({ message: `${registerStatus}` });
+        res.status(400).json({ message: `${registerStatus}` });
         console.log(registerStatus);
     }
 });
@@ -89,6 +87,7 @@ app.post("/api/makeMove", (req, res) => {
 // backend
 app.get("/api/check-auth", (req, res) => {
     if (req.session.user) {
+        console.log(req.session);
         res.json({ isLoggedIn: true, user: req.session.user });
     } else {
         res.json({ isLoggedIn: false });

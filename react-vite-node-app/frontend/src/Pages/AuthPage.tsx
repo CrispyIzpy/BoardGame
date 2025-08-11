@@ -35,8 +35,7 @@ const AuthPage: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    const route = isLogin ? "Login" : "Register";
+    const route = isLogin ? "login" : "register";
     try {
       const response = await axios.post(
         `http://localhost:5000/api/${route}`,
@@ -49,7 +48,7 @@ const AuthPage: React.FC = () => {
         text: response.data.message || "Success!",
         type: "success",
       });
-    } catch (error) {
+    } catch (error: any) {
       setMessage({
         text: error.response?.data?.message || "Something went wrong",
         type: "error",
