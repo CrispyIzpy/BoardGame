@@ -29,7 +29,7 @@ const NavBar: React.FC<NavBarProps> = ({
   logo = "GameHub",
   navItems = [
     { label: "Home", href: "/", isActive: true },
-    { label: "BoardGame", href: "/Board" },
+    { label: "BoardGame", href: "/board_game" },
     { label: "Games", href: "/games" },
     { label: "Leaderboard", href: "/leaderboard" },
     { label: "About", href: "/about" },
