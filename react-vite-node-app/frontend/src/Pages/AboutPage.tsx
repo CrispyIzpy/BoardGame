@@ -4,9 +4,7 @@ import {
   Target,
   Zap,
   Heart,
-  Trophy,
   Shield,
-  Clock,
   Globe,
   Star,
   Code,
@@ -119,7 +117,7 @@ const AboutPage = () => {
     <div className="about-page">
       {/* Background */}
       <div className="about-background">
-        {/* <div className="background-base" /> */}
+        <div className="background-base" />
         <div className="background-animated" />
 
         {/* Floating Shapes */}

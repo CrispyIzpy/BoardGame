@@ -13,13 +13,6 @@
     --border-color: rgba(255, 255, 255, 0.1);
     --border-hover: rgba(0, 212, 255, 0.5);
     --shadow-glow: rgba(0, 212, 255, 0.25);
-    --transition-fast: 0.2s ease-out;
-    --transition-medium: 0.3s ease-out;
-    --transition-slow: 0.5s ease-out;
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
 }
 
 /* Base Styles */
