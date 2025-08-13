@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/NavBar.css";
 import { useNavigate, NavLink } from "react-router-dom";
+import axios from "axios";
 
 interface NavItem {
   label: string;
@@ -9,8 +10,8 @@ interface NavItem {
 }
 
 interface User {
-  name: string;
-  email: string;
+  userId: number;
+  username: string;
   avatar?: string;
 }
 
@@ -40,7 +41,7 @@ const NavBar: React.FC<NavBarProps> = ({
   onProfile,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(
@@ -56,19 +57,20 @@ const NavBar: React.FC<NavBarProps> = ({
     navigate("/auth");
   };
   if (user === null) {
-    fetch("/api/check-auth", {
-      credentials: "include", // VERY important to send cookies!
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+    axios
+      .get("/api/check-auth", { withCredentials: true })
+      .then((response) => {
+        console.log(response.data);
 
-        if (data.isLoggedIn) {
-          setUser(data.user); // store user info in React state
-          console.log(data.user);
+        if (response.data.isLoggedIn) {
+          setUser(response.data.user);
+          console.log(response.data.user);
         } else {
           setUser(null);
         }
+      })
+      .catch((error) => {
+        console.error("Error checking auth:", error);
       });
   }
 
@@ -148,15 +150,15 @@ const NavBar: React.FC<NavBarProps> = ({
                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                 >
                   <div className="user-avatar">
-                    {user.avatar ? (
+                    {/* user.avatar ? (
                       <img src={user.avatar} alt={user.name} />
                     ) : (
                       user.name.charAt(0).toUpperCase()
-                    )}
+                    ) */}
                   </div>
                   <div className="user-info">
-                    <div className="user-name">{user.name}</div>
-                    <div className="user-email">{user.email}</div>
+                    <div className="user-name">{user.username}</div>
+                    {/* <div className="user-email">{user.email}</div> */}
                   </div>
                   <svg
                     className="chevron-icon"

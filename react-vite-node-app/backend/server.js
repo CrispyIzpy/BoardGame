@@ -1,7 +1,8 @@
 import express, { response } from "express";
-import session from "express-session";
+import session, { MemoryStore } from "express-session";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
+import cookieParser from "cookie-parser";
 
 import { generateHexTiles } from "./tileGenerator.js";
 import { register, login } from "./Auth.js";
@@ -30,7 +31,8 @@ app.use(
         cookie: {
             secure: false, // set to true in production with HTTPS
             httpOnly: true,
-            maxAge: 1000 * 60 * 60, // 1 hour
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24, // 24 hour
         },
     })
 );
@@ -50,14 +52,14 @@ app.post("/api/login", async (req, res) => {
     const loginStatus = await login(req.body);
 
     if (loginStatus.status === "Success") {
-        res.status(200);
-        res.json({ message: "Login successfully" });
         console.log("Success");
         req.session.user = {
             userId: loginStatus.userId,
             username: loginStatus.username,
         };
         console.log(req.session);
+        res.status(200);
+        res.json({ message: "Login successfully" });
     } else {
         res.status(400);
         res.json({ message: `${loginStatus}` });
@@ -86,8 +88,8 @@ app.post("/api/makeMove", (req, res) => {
 
 // backend
 app.get("/api/check-auth", (req, res) => {
+    console.log(req.session);
     if (req.session.user) {
-        console.log(req.session);
         res.json({ isLoggedIn: true, user: req.session.user });
     } else {
         res.json({ isLoggedIn: false });

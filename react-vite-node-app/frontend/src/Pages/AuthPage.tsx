@@ -48,6 +48,9 @@ const AuthPage: React.FC = () => {
         text: response.data.message || "Success!",
         type: "success",
       });
+      axios
+        .get("http://localhost:5000/api/check-auth", { withCredentials: true })
+        .then((res) => console.log(res.data));
     } catch (error: any) {
       setMessage({
         text: error.response?.data?.message || "Something went wrong",

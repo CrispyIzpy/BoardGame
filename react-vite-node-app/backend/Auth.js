@@ -89,6 +89,9 @@ export async function login(userInfo) {
         }
     } catch (err) {
         console.error(err);
-        return "User not found";
+        if ((err = -4078)) {
+            return "Connection error! Check connection and try again!";
+        }
+        return "Problem with the servers. Try again later or contact support!";
     }
 }
