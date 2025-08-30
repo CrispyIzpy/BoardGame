@@ -6,7 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5000'
-    }
+      '/api': 'http://backend:5000'
+    },
+    watch: {  //! added to work the the docker on the D: drive
+      usePolling: true,
+      interval: 100,
+    },
+    host: true,
   }  
 })

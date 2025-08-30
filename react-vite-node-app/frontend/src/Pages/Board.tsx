@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState, type JSX } from "react";
 import "../styles/Board.css";
 import HexTile from "../components/HexTile";
@@ -13,39 +14,39 @@ const Board = () => {
 
   const rowLengths = [3, 4, 5, 4, 3]; // diamond shape
   useEffect(() => {
-    fetch("http://localhost:5000/api/generateHexTiles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ rowLengths: rowLengths }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok");
-        return res.json();
+    axios
+      .post(
+        "http://localhost:5000/api/generateHexTiles",
+        { rowLengths: rowLengths },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        setHexTiles(response.data);
       })
-      .then((hexTiles) => {
-        setHexTiles(hexTiles);
-      })
-      .catch((err) => {
-        console.error("Error fetching tiles:", err);
+      .catch((error) => {
+        console.error("Error fetching tiles:", error);
       });
   }, []);
 
   const handleClick = (roadId: number, tileId: number) => {
-    fetch("http://localhost:5000/api/makeMove", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ roadId: roadId, tileId: tileId }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Click not registered");
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Success:", data);
+    axios
+      .post(
+        "http://localhost:5000/api/makeMove",
+        { roadId: roadId, tileId: tileId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        console.log("Success:", response.data);
       })
       .catch((error) => {
         console.error("Error:", error);

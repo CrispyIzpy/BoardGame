@@ -87,6 +87,7 @@ const AuthPage: React.FC = () => {
       <div className="auth-card glass-effect">
         <div className="auth-header">
           <h1 className="auth-title text-gradient">
+            {/* Welcome Back */}
             {isLogin ? "Welcome Back" : "Create Account"}
           </h1>
           <p className="auth-subtitle">

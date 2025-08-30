@@ -56,6 +56,17 @@ const NavBar: React.FC<NavBarProps> = ({
   onLogin = () => {
     navigate("/auth");
   };
+  onLogout = () => {
+    axios
+      .post("/api/logout", { withCredentials: true })
+      .then((response) => {
+        console.log(response.data);
+        setUser(null);
+      })
+      .catch((error) => {
+        console.error("Error loggin out auth:", error);
+      });
+  };
   if (user === null) {
     axios
       .get("/api/check-auth", { withCredentials: true })

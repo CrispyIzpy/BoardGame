@@ -56,6 +56,8 @@ app.post("/api/login", async (req, res) => {
         req.session.user = {
             userId: loginStatus.userId,
             username: loginStatus.username,
+            boardGenerated: false,
+            tiles: null,
         };
         console.log(req.session);
         res.status(200);
@@ -67,15 +69,39 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
+app.post("/api/logout", async (req, res) => {
+    if (req.session.user) {
+        delete req.session.user;
+        res.json({ isLoggedIn: false, user: null });
+        console.log("Session deleted");
+    } else {
+        res.json({ isLoggedIn: false, user: null });
+    }
+});
+
 app.get("/api/hello", (req, res) => {
     res.json({ message: "Hello from backend" });
 });
 
 app.post("/api/generateHexTiles", (req, res) => {
-    console.log("Tiles request");
-    const size = req.body.rowLengths || 24;
-    const tiles = generateHexTiles(size);
-    res.json(tiles);
+    if (!req.session.user) {
+        console.log("No user logged in!");
+        return;
+    }
+
+    if (!req.session.user.boardGenerated) {
+        console.log("Tiles request");
+        const size = req.body.rowLengths || 24;
+        const tiles = generateHexTiles(size);
+
+        req.session.user.tiles = tiles;
+        req.session.user.boardGenerated = true;
+        res.json(tiles);
+    } else {
+        console.log("Board is already generated");
+        const tiles = req.session.user.tiles;
+        res.json(tiles);
+    }
 });
 
 app.post("/api/makeMove", (req, res) => {
