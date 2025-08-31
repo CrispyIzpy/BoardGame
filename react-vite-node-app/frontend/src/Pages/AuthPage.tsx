@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/AuthPage.css";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -20,8 +21,21 @@ const AuthPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{
     text: string;
-    type: "success" | "error";
+    type: "success" | "error" | "info";
   } | null>(null);
+  // const [urlMessage, setUrlMessage] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const urlMessage = searchParams.get("message");
+  console.log("Query message:", urlMessage);
+
+  useEffect(() => {
+    if (urlMessage) {
+      setMessage({
+        text: urlMessage,
+        type: "info",
+      });
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,6 +58,7 @@ const AuthPage: React.FC = () => {
           withCredentials: true,
         }
       );
+
       setMessage({
         text: response.data.message || "Success!",
         type: "success",

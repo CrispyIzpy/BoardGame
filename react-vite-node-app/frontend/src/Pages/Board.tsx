@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState, type JSX } from "react";
 import "../styles/Board.css";
 import HexTile from "../components/HexTile";
+import { useNavigate } from "react-router-dom";
 
 interface HexTileProps {
   id: number;
@@ -10,6 +11,7 @@ interface HexTileProps {
 }
 
 const Board = () => {
+  const navigate = useNavigate();
   const [hexTiles, setHexTiles] = useState<HexTileProps[]>([]);
 
   const rowLengths = [3, 4, 5, 4, 3]; // diamond shape
@@ -29,6 +31,14 @@ const Board = () => {
         setHexTiles(response.data);
       })
       .catch((error) => {
+        if (error.status == 401) {
+          console.error("Please log in:", error);
+
+          const message = "Please login or register!";
+          const encodedMessage = encodeURIComponent(message);
+          navigate(`/auth?message=${encodedMessage}`);
+          return;
+        }
         console.error("Error fetching tiles:", error);
       });
   }, []);

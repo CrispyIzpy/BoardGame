@@ -1,5 +1,7 @@
 import express, { response } from "express";
 import session, { MemoryStore } from "express-session";
+import { RedisStore } from "connect-redis";
+import { createClient } from "redis";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import cookieParser from "cookie-parser";
@@ -8,12 +10,28 @@ import { generateHexTiles } from "./tileGenerator.js";
 import { register, login } from "./Auth.js";
 
 const app = express();
+
 app.use(
     cors({
         origin: "http://localhost:5173",
         credentials: true, // allow cookies
     })
 );
+
+let redisClient = createClient({
+    url: "redis://redis:6379",
+});
+redisClient.connect().catch((error) => {
+    console.log("There is an error with redis!");
+    console.error(error);
+});
+
+// Initialize store.
+let redisStore = new RedisStore({
+    client: redisClient,
+    prefix: "myapp:",
+});
+
 app.use(express.json());
 
 function genuuid() {
@@ -22,6 +40,7 @@ function genuuid() {
 
 app.use(
     session({
+        store: new RedisStore({ client: redisClient }),
         genid: function (req) {
             return genuuid();
         },
@@ -57,7 +76,6 @@ app.post("/api/login", async (req, res) => {
             userId: loginStatus.userId,
             username: loginStatus.username,
             boardGenerated: false,
-            tiles: null,
         };
         console.log(req.session);
         res.status(200);
@@ -83,26 +101,67 @@ app.get("/api/hello", (req, res) => {
     res.json({ message: "Hello from backend" });
 });
 
-app.post("/api/generateHexTiles", (req, res) => {
-    if (!req.session.user) {
-        console.log("No user logged in!");
-        return;
-    }
+app.post("/api/generateHexTiles", async (req, res) => {
+    try {
+        // Check if user is logged in
+        if (!req.session.user) {
+            console.log("No user logged in!");
+            return res
+                .status(401)
+                .json({ error: "Unauthorized: Please log in first." });
+        }
 
-    if (!req.session.user.boardGenerated) {
+        const redisKey = `tiles:${req.sessionID}`;
+        let tiles;
+
+        // If board is already generated
+        if (req.session.user.boardGenerated) {
+            console.log("Board is already generated");
+
+            try {
+                // Try to get tiles from Redis
+                tiles = await redisClient.get(redisKey);
+                if (tiles) {
+                    tiles = JSON.parse(tiles);
+                } else {
+                    console.warn("Tiles not found in Redis, regenerating...");
+                    tiles = regenerateTiles(req.body.rowLengths || 24);
+                }
+            } catch (redisError) {
+                console.error("Redis GET error:", redisError);
+                // Fallback: regenerate tiles
+                tiles = regenerateTiles(req.body.rowLengths || 24);
+            }
+
+            return res.json(tiles);
+        }
+
+        // If board is not yet generated
         console.log("Tiles request");
-        const size = req.body.rowLengths || 24;
-        const tiles = generateHexTiles(size);
+        tiles = generateHexTiles(req.body.rowLengths || 24);
 
-        req.session.user.tiles = tiles;
         req.session.user.boardGenerated = true;
+
+        try {
+            await redisClient.set(redisKey, JSON.stringify(tiles));
+            console.log("Tiles saved to Redis");
+        } catch (redisError) {
+            console.error("Redis SET error:", redisError);
+            // Fallback: continue without Redis
+        }
+
         res.json(tiles);
-    } else {
-        console.log("Board is already generated");
-        const tiles = req.session.user.tiles;
-        res.json(tiles);
+    } catch (error) {
+        console.error("Error in /api/generateHexTiles:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
+
+// Helper in case Redis fails and tiles need regeneration
+function regenerateTiles(size) {
+    console.log("Regenerating tiles without Redis");
+    return generateHexTiles(size);
+}
 
 app.post("/api/makeMove", (req, res) => {
     const tileId = req.body.tileId;
