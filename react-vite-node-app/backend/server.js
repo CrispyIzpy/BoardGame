@@ -163,10 +163,29 @@ function regenerateTiles(size) {
     return generateHexTiles(size);
 }
 
-app.post("/api/makeMove", (req, res) => {
+app.post("/api/makeMove", async (req, res) => {
     const tileId = req.body.tileId;
     const roadId = req.body.roadId;
+    const playerId = req.session.user.userId;
+    console.log(playerId);
     const msg = `"Road build on tile id: ", ${tileId}, " and road id: ", ${roadId}`;
+
+    const redisKey = `building:${req.sessionID}`;
+
+    let moves = await redisClient.get(redisKey);
+
+    moves = moves ? JSON.parse(moves) : [];
+    const move = {
+        tileId: tileId,
+        roadId: roadId,
+        playerId: playerId,
+    };
+
+    if (move.tileId && move.roadId) {
+        moves.push(move);
+    }
+
+    await redisClient.set(redisKey, JSON.stringify(moves));
     console.log(msg);
     res.json(msg);
 });
