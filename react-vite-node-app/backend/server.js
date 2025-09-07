@@ -21,6 +21,7 @@ app.use(
 let redisClient = createClient({
     url: "redis://redis:6379",
 });
+
 redisClient.connect().catch((error) => {
     console.log("There is an error with redis!");
     console.error(error);
@@ -77,7 +78,6 @@ app.post("/api/login", async (req, res) => {
             username: loginStatus.username,
             boardGenerated: false,
         };
-        console.log(req.session);
         res.status(200);
         res.json({ message: "Login successfully" });
     } else {
@@ -111,7 +111,7 @@ app.post("/api/generateHexTiles", async (req, res) => {
                 .json({ error: "Unauthorized: Please log in first." });
         }
 
-        const redisKey = `tiles:${req.sessionID}`;
+        const redisKey = `user:${req.session.user.userId}:tiles`;
         let tiles;
 
         // If board is already generated
@@ -170,7 +170,7 @@ app.post("/api/makeMove", async (req, res) => {
     console.log(playerId);
     const msg = `"Road build on tile id: ", ${tileId}, " and road id: ", ${roadId}`;
 
-    const redisKey = `building:${req.sessionID}`;
+    const redisKey = `user:${req.session.user.userId}:moves`;
 
     let moves = await redisClient.get(redisKey);
 
@@ -192,7 +192,6 @@ app.post("/api/makeMove", async (req, res) => {
 
 // backend
 app.get("/api/check-auth", (req, res) => {
-    console.log(req.session);
     if (req.session.user) {
         res.json({ isLoggedIn: true, user: req.session.user });
     } else {
