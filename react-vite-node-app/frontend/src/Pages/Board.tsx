@@ -35,8 +35,19 @@ const Board = () => {
           console.error("Please log in:", error);
 
           const message = "Please login or register!";
+          const type = "info";
           const encodedMessage = encodeURIComponent(message);
-          navigate(`/auth?message=${encodedMessage}`);
+          const encodedType = encodeURIComponent(type);
+          navigate(`/auth?message=${encodedMessage}&type=${encodedType}`);
+          return;
+        } else if (error.code == "ERR_NETWORK") {
+          console.error("Servers may be down:", error);
+
+          const message = "Network connection error! Try again later!";
+          const type = "error";
+          const encodedMessage = encodeURIComponent(message);
+          const encodedType = encodeURIComponent(type);
+          navigate(`/auth?message=${encodedMessage}&type=${encodedType}`);
           return;
         }
         console.error("Error fetching tiles:", error);

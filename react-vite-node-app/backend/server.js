@@ -5,9 +5,12 @@ import { createClient } from "redis";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import cookieParser from "cookie-parser";
+import WebSocket, { WebSocketServer } from "ws";
 
 import { generateHexTiles } from "./tileGenerator.js";
 import { register, login } from "./Auth.js";
+import { makeMove } from "./MakeMove.js";
+import { matchMaking } from "./MatchMaking.js";
 
 const app = express();
 
@@ -21,6 +24,8 @@ app.use(
 let redisClient = createClient({
     url: "redis://redis:6379",
 });
+
+const wss = new WebSocketServer({ port: 8080 });
 
 redisClient.connect().catch((error) => {
     console.log("There is an error with redis!");
@@ -101,6 +106,17 @@ app.get("/api/hello", (req, res) => {
     res.json({ message: "Hello from backend" });
 });
 
+app.post("/api/MatchMaking", async (req, res) => {
+    if (!req.session.user) {
+        console.log("No user logged in!");
+        return res
+            .status(401)
+            .json({ error: "Unauthorized: Please log in first." });
+    }
+    const result = await matchMaking(redisClient, req.session.user.userId);
+    res.json({ message: result });
+});
+
 app.post("/api/generateHexTiles", async (req, res) => {
     try {
         // Check if user is logged in
@@ -167,6 +183,8 @@ app.post("/api/makeMove", async (req, res) => {
     const tileId = req.body.tileId;
     const roadId = req.body.roadId;
     const playerId = req.session.user.userId;
+
+    const moveData = req.body;
     console.log(playerId);
     const msg = `"Road build on tile id: ", ${tileId}, " and road id: ", ${roadId}`;
 
@@ -174,16 +192,7 @@ app.post("/api/makeMove", async (req, res) => {
 
     let moves = await redisClient.get(redisKey);
 
-    moves = moves ? JSON.parse(moves) : [];
-    const move = {
-        tileId: tileId,
-        roadId: roadId,
-        playerId: playerId,
-    };
-
-    if (move.tileId && move.roadId) {
-        moves.push(move);
-    }
+    makeMove(moves, moveData, playerId);
 
     await redisClient.set(redisKey, JSON.stringify(moves));
     console.log(msg);

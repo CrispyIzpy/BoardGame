@@ -1,12 +1,5 @@
 /* AboutPage.css */
 
-/* Import base variables (assuming they're shared) */
-:root {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-card: rgba(30, 41, 59, 0.5);
-}
-
 /* Base Styles */
 .about-page {
     min-height: 100vh;

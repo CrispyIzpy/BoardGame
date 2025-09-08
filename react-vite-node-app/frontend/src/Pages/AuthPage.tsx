@@ -26,13 +26,16 @@ const AuthPage: React.FC = () => {
   // const [urlMessage, setUrlMessage] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const urlMessage = searchParams.get("message");
-  console.log("Query message:", urlMessage);
+  const type = searchParams.get("type");
 
   useEffect(() => {
     if (urlMessage) {
       setMessage({
         text: urlMessage,
-        type: "info",
+        type:
+          type === "success" || type === "error" || type === "info"
+            ? type
+            : "info",
       });
     }
   }, []);
