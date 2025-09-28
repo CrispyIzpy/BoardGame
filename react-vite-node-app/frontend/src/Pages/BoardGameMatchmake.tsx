@@ -14,14 +14,34 @@ import {
 } from "lucide-react";
 import "../styles/BoardGameMatchmake.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const BoardGameMatchmake = () => {
   const [isMatchmaking, setIsMatchmaking] = useState(false);
   const [queueTime, setQueueTime] = useState(0);
   const [playersInQueue, setPlayersInQueue] = useState(12);
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let interval;
+
+    const socket = new WebSocket("ws://localhost:8080");
+    setWs(socket);
+
+    socket.onopen = () => {
+      console.log("Connected to server ✅");
+    };
+
+    // socket.onmessage = (event) => {
+    //   const data = JSON.parse(event.data);
+    //   setMessages((prev) => [...prev, data]);
+    // };
+
+    socket.onclose = () => {
+      console.log("Disconnected ❌");
+    };
+
     if (isMatchmaking) {
       interval = setInterval(() => {
         setQueueTime((prev) => prev + 1);
@@ -54,6 +74,16 @@ const BoardGameMatchmake = () => {
         console.log(response);
       })
       .catch((error) => {
+        if (error.status == 401) {
+          console.error("Please log in:", error);
+
+          const message = "Please login or register!";
+          const type = "info";
+          const encodedMessage = encodeURIComponent(message);
+          const encodedType = encodeURIComponent(type);
+          navigate(`/auth?message=${encodedMessage}&type=${encodedType}`);
+          return;
+        }
         console.error("Error fetching tiles:", error);
       });
 

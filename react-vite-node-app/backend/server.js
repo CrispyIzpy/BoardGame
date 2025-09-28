@@ -3,16 +3,30 @@ import session, { MemoryStore } from "express-session";
 import { RedisStore } from "connect-redis";
 import { createClient } from "redis";
 import cors from "cors";
+import http from "http";
 import { v4 as uuidv4 } from "uuid";
 import cookieParser from "cookie-parser";
+import { Server } from "socket.io";
 import WebSocket, { WebSocketServer } from "ws";
 
 import { generateHexTiles } from "./tileGenerator.js";
-import { register, login } from "./Auth.js";
+import { requireAuth, register, login } from "./Auth.js";
 import { makeMove } from "./MakeMove.js";
 import { matchMaking } from "./MatchMaking.js";
+import setupWebSocket from "./websocket/socketHandler.js";
 
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+    },
+});
+
+setupWebSocket(io);
 
 app.use(
     cors({
@@ -106,27 +120,13 @@ app.get("/api/hello", (req, res) => {
     res.json({ message: "Hello from backend" });
 });
 
-app.post("/api/MatchMaking", async (req, res) => {
-    if (!req.session.user) {
-        console.log("No user logged in!");
-        return res
-            .status(401)
-            .json({ error: "Unauthorized: Please log in first." });
-    }
+app.post("/api/MatchMaking", requireAuth, async (req, res) => {
     const result = await matchMaking(redisClient, req.session.user.userId);
     res.json({ message: result });
 });
 
-app.post("/api/generateHexTiles", async (req, res) => {
+app.post("/api/generateHexTiles", requireAuth, async (req, res) => {
     try {
-        // Check if user is logged in
-        if (!req.session.user) {
-            console.log("No user logged in!");
-            return res
-                .status(401)
-                .json({ error: "Unauthorized: Please log in first." });
-        }
-
         const redisKey = `user:${req.session.user.userId}:tiles`;
         let tiles;
 

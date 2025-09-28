@@ -1,15 +1,6 @@
 import argon2 from "argon2";
 import sql from "./db.js";
 
-async function testConnection() {
-    try {
-        const result = await sql`SELECT 1`;
-        console.log("✅ Database connected!", result);
-    } catch (err) {
-        console.error("❌ Failed to connect to database:", err);
-    }
-}
-
 export async function register(userInfo) {
     const email = userInfo.email;
     const password = userInfo.password;
@@ -95,3 +86,13 @@ export async function login(userInfo) {
         return "Problem with the servers. Try again later or contact support!";
     }
 }
+
+export const requireAuth = (req, res, next) => {
+    if (!req.session.user) {
+        console.log("No user logged in!");
+        return res
+            .status(401)
+            .json({ error: "Unauthorized: Please log in first." });
+    }
+    next();
+};
